@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Symptom Checker Chatbot</title>
+    <script>
+        function sendMessage() {
+            var userMessage = document.getElementById("userInput").value;
+            var chatBox = document.getElementById("chatBox");
+
+            // Append user message
+            chatBox.innerHTML += "<p><strong>You:</strong> " + userMessage + "</p>";
+
+            // Send message to Flask backend
+            fetch('/get', {
+                method: 'POST',
+                body: new URLSearchParams({'msg': userMessage}),
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            })
+            .then(response => response.text())
+            .then(data => {
+                chatBox.innerHTML += "<p><strong>Bot:</strong> " + data + "</p>";
+            });
+
+            document.getElementById("userInput").value = "";
+        }
+    </script>
+</head>
+<body>
+    <h1>Symptom Checker Chatbot</h1>
+    <div id="chatBox"></div>
+    <input type="text" id="userInput" placeholder="Enter your symptom...">
+    <button onclick="sendMessage()">Send</button>
+</body>
+</html>
